@@ -20,19 +20,19 @@ __Note:__ All IP addresses, database users and passwords have been replace with 
 Stylesheet, logo, font and footer files are place in the `WWW` folder. Shiny readily accepts them in this directory.
 
 ## Source Code Explanation
-- `global.R`
+- `global.R`  
 Contains static logic for the dashboard as well as library imports.
 
-- `app.R`
+- `app.R`  
 Main dashboard source file, contains all UI and Server logic.
 
-- `ws_db.sql`  
+- `ws_db.sql`    
 Creates database schema.
 
-- `init_wsDB.py`
+- `init_wsDB.py`  
 Populate the database.
 
-- `update_wsDB.py`
+- `update_wsDB.py`  
 Update the database on change in output tables from weather station.
 
 - `run.bat`, `run_dashboard.sh`, and `run_db script.sh`   
