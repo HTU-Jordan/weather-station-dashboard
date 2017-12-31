@@ -1,0 +1,127 @@
+@font-face {
+    font-family: ScalaSansPro-Regular;
+    src: url('ScalaSansPro-Regular.otf');
+}
+
+#link {
+  color: #008cba;
+}
+
+body {
+	font-family: ScalaSansPro-Regular !important;
+	background-color: #FFFFFF !important;
+  line-height: 1.3 !important;
+}
+
+.content-wrapper {
+	background-color: #FFFFFF !important;
+}
+
+#logo {
+	width: 71%;
+	align: center;
+	display: inline-block;
+}
+
+.main-header .logo {
+    width: 20% !important;
+}
+
+div.box-header {
+  text-align: center;
+}
+
+/*#visibility_time {
+  height: 80%;
+  width: auto;
+}*/
+
+/*#correlation_plot {
+	position: absolute;
+	right: 0px;
+	top: 150px;
+}
+*/
+/*#correlation_plot > img {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+}*/
+
+.skin-black .main-header > .logo {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 0 solid transparent;
+    border-right: 0;
+}
+
+.main-header .logo {
+    -webkit-transition: width .3s ease-in-out;
+    -o-transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+    display: block;
+    float: left;
+    height: 120px;
+    font-size: 20px;
+    line-height: 90px;
+    text-align: center;
+    width: 230px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding: 0px 0px;
+    font-weight: 300;
+    overflow: hidden;
+}
+
+.skin-black .main-header .navbar {
+    background-color: #fff;
+    display: none;
+}
+
+/*
+.info-box {min-height: 67px;}
+.info-box-icon {height: 67px; line-height: 67px;}
+*/
+
+.info-box-content {padding-top: 25px !important;
+padding-bottom: 0;
+margin-left: 95px;
+padding: 5px 5px;
+font-family: Calibri;}
+
+
+#air_temp_box{width: 16%;}
+#wind_speed_box{width: 16%;}
+#solar_rad_box{width: 16%;}
+#rel_humidity_box{width: 16%;}
+#air_d_box{width: 16%;}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.fa-sm{
+    -webkit-transform: scale(0.5,0.5);
+    -ms-transform: scale(0.5,0.5);
+    transform: scale(0.5,0.5);
+    vertical-align: middle;
+    padding-bottom: 10%;
+}
+
+.footer {bottom: 0; }
+.footer > p:nth-child(1) {text-align: center;}
+
+.recalculating { opacity: 1.0; }
+
+.shiny-output-error { visibility: hidden; }
+.shiny-output-error:before { visibility: hidden; }
+
+.fa-wind:before { content: "\301C"; font-family: sans-serif; }
+.fa-rho:before { content: "\2374"; font-family: sans-serif; }
+
+/*.main-header .logo {
+  height: 110px;
+}*/
+
+.shiny-output-error { visibility: hidden; }
+.shiny-output-error:before { visibility: hidden; }
