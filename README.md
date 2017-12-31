@@ -19,7 +19,7 @@ __Note:__ All IP addresses, database users and passwords have been replace with 
 
 
 ## Folder Structure
-Stylesheet, logo, font and footer files are place in the `WWW` folder. Shiny readily accepts them in this directory.
+Stylesheet, logo, font and footer files are place in the `www` folder. Shiny readily accepts them in this directory.
 
 ## Source Code Explanation
 - `global.R`  
