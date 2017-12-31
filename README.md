@@ -38,3 +38,6 @@ Update the database on change in output tables from weather station.
 - `run.bat`, `run_dashboard.sh`, and `run_db script.sh`   
 Windows and Linux scripts to run the dashboard by broadcasting to an IP address and run the database update script
 
+- `www\style.css`  
+CSS design stylesheet for the dashboard.
+
