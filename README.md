@@ -3,7 +3,7 @@
 ## Overview
 We have a weather station atop the main building at HTU. We decided to take the data feed and create a simple real-time / pseudo real-time dashboard that represents the data in an intuitive way and gives insight into our weather conditions.
 
-![dashboard](dashboard.png)
+![dashboard](dashboard_scrot.png)
 
 __Note:__ All IP addresses, database users and passwords have been replace with * for security purposes.
 
