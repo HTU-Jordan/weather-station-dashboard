@@ -5,7 +5,7 @@ We have a weather station atop the main building at HTU. We decided to take the 
 
 ![dashboard](dashboard_screenshot.png)
 
-__Note:__ All IP addresses, database users and passwords have been replace with * for security purposes.
+__Note:__ All IP addresses, database users and passwords have been replaced with * for security purposes.
 
 ## Technologies
 
