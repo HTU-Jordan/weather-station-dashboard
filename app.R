@@ -41,7 +41,7 @@ body <- dashboardBody(
           status = "primary",
           solidHeader = TRUE,
           h3("Sources"),
-          p("For the code, please visit the following link: ", a("www.github.com/HTU-Amman/weather-station-dashboard")),
+          p("For the code, please visit the following link: ", a("www.github.com/HTU-Jordan/weather-station-dashboard")),
           h3("Daily Temperature"),
           p("The plot on the top shows the lowest, highest and mean (average) temperature of the day."),
           p("The smaller the window, the cloudier the day, as clouds trap infrared energy and prevent sunlight reaching the earth, hence minimizing how much the earth cools and how much it heats."),
