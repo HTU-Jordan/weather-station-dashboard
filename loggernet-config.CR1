@@ -1,0 +1,176 @@
+'CR1000
+
+'Declare Variables and Units
+Public BattV
+Public PTemp_C
+Public WS_ms
+Public WindDir
+Public SlrkW
+Public SlrMJ
+Public TRHData(2)
+Public Rain_mm
+Public CS120Str As String * 5000
+Public CS120_Bytes
+Public LngCRCMsg
+Public LngCRCCalc
+Public ChkSumF As Boolean
+Public CS120StrArr(6) As String
+Public CS120NumArr(19)
+Public BP_mmHg
+
+Alias TRHData(1)=AirTC
+Alias TRHData(2)=RH
+Alias CS120StrArr(1)=CS120StrArr1
+Alias CS120StrArr(2)=CS120StrArr2
+Alias CS120StrArr(3)=CS120StrArr3
+Alias CS120StrArr(4)=CS120StrArr4
+Alias CS120StrArr(5)=CS120StrArr5
+Alias CS120StrArr(6)=Vis_Units
+Alias CS120NumArr(1)=CS120NumArr1
+Alias CS120NumArr(2)=CS120NumArr2
+Alias CS120NumArr(3)=SysS
+Alias CS120NumArr(4)=MsgInt
+Alias CS120NumArr(5)=Visibility_m
+Alias CS120NumArr(6)=CS120NumArr6
+Alias CS120NumArr(7)=AvDur
+Alias CS120NumArr(8)=UAlarm1
+Alias CS120NumArr(9)=UAlarm2
+Alias CS120NumArr(10)=SAEmitF
+Alias CS120NumArr(11)=SAEmitD
+Alias CS120NumArr(12)=SAEmitT
+Alias CS120NumArr(13)=SADetD
+Alias CS120NumArr(14)=SADetT
+Alias CS120NumArr(15)=SADetS
+Alias CS120NumArr(16)=SAHoodT
+Alias CS120NumArr(17)=SASigE
+Alias CS120NumArr(18)=SAFlasR
+Alias CS120NumArr(19)=SAFlasW
+
+Units BattV=Volts
+Units PTemp_C=Deg C
+Units WS_ms=meters/second
+Units WindDir=degrees
+Units SlrkW=kW/m^2
+Units SlrMJ=MJ/m^2
+Units Rain_mm=mm
+Units BP_mmHg=mmHg
+Units AirTC=Deg C
+Units RH=%
+Units CS120StrArr1=unitless
+Units CS120StrArr2=unitless
+Units CS120StrArr3=unitless
+Units CS120StrArr4=unitless
+Units CS120StrArr5=unitless
+Units Vis_Units=unitless
+Units CS120NumArr1=unitless
+Units CS120NumArr2=unitless
+Units SysS=unitless
+Units MsgInt=unitless
+Units Visibility_m=meters
+Units CS120NumArr6=unitless
+Units AvDur=unitless
+Units UAlarm1=unitless
+Units UAlarm2=unitless
+Units SAEmitF=unitless
+Units SAEmitD=unitless
+Units SAEmitT=unitless
+Units SADetD=unitless
+Units SADetT=unitless
+Units SADetS=unitless
+Units SAHoodT=unitless
+Units SASigE=unitless
+Units SAFlasR=unitless
+Units SAFlasW=unitless
+
+'Define Data Tables
+DataTable(OneHour,True,-1)
+	DataInterval(0,60,Min,10)
+	WindVector(1,WS_ms,WindDir,FP2,False,10,0,0)
+	FieldNames("WS_ms_S_WVT,WindDir_D1_WVT")
+	Average(1,SlrkW,FP2,False)
+	Average(1,AirTC,FP2,False)
+	Sample(1,RH,FP2)
+	Totalize(1,Rain_mm,FP2,False)
+	Sample(1,Visibility_m,IEEE4)
+	Sample(1,BP_mmHg,FP2)
+EndTable
+
+'Define Data Tables
+DataTable(OneMin,True,-1)
+	DataInterval(0,1,Min,10)
+	WindVector(1,WS_ms,WindDir,FP2,False,10,0,0)
+	FieldNames("WS_ms_S_WVT,WindDir_D1_WVT")
+	Average(1,SlrkW,FP2,False)
+	Average(1,AirTC,FP2,False)
+	Sample(1,RH,FP2)
+	Totalize(1,Rain_mm,FP2,False)
+	Sample(1,Visibility_m,IEEE4)
+	Sample(1,BP_mmHg,FP2)
+EndTable
+
+'Define Data Tables
+DataTable(FifteenSec,True,-1)
+	DataInterval(0,5,Sec,10)
+	WindVector(1,WS_ms,WindDir,FP2,False,10,0,0)
+	FieldNames("WS_ms_S_WVT,WindDir_D1_WVT")
+	Average(1,SlrkW,FP2,False)
+	Average(1,AirTC,FP2,False)
+	Sample(1,RH,FP2)
+	Totalize(1,Rain_mm,FP2,False)
+	Sample(1,Visibility_m,IEEE4)
+	Sample(1,BP_mmHg,FP2)
+EndTable
+
+'Main Program
+BeginProg
+	'Open Com1 for communications with the CS120 Visibility Sensor
+	SerialOpen(Com1,38400,3,0,1000)
+	'Main Scan
+	Scan(1,Min,1,0)
+		'Default CR1000 Datalogger Battery Voltage measurement 'BattV'
+		Battery(BattV)
+		'Default CR1000 Datalogger Wiring Panel Temperature measurement 'PTemp_C'
+		PanelTemp(PTemp_C,_60Hz)
+		'03002 Wind Speed & Direction Sensor measurements 'WS_ms' and 'WindDir'
+		PulseCount(WS_ms,1,1,1,1,0.75,0.2)
+		If WS_ms<0.01 Then WS_ms=0
+		BrHalf(WindDir,1,mV2500,1,1,1,2500,True,20000,_60Hz,352,0)
+		If WindDir>=360 Or WindDir<0 Then WindDir=0
+		'CS300 Pyranometer measurements 'SlrMJ' and 'SlrkW'
+		VoltSE(SlrkW,1,mV250,2,1,0,_60Hz,1,0)
+		If SlrkW<0 Then SlrkW=0
+		SlrMJ=SlrkW*0.0003
+		SlrkW=SlrkW*0.005
+		'CS215 Temperature & Relative Humidity Sensor measurements 'AirTC' and 'RH'
+		SDI12Recorder(TRHData(),7,"0","M!",1,0,-1)
+		'TE525/TE525WS Rain Gauge measurement 'Rain_mm'
+		PulseCount(Rain_mm,1,2,2,0,0.254,0)
+		'Get data from CS120/CS120A Visibility Sensor
+		SerialInRecord(Com1,CS120Str,&h02,0,&h03,CS120_Bytes,01)
+		If CS120_Bytes>0 Then
+			'Two splits, first gets numbers.
+			SplitStr(CS120NumArr(),CS120Str," ",19,5)
+			'Second gets strings like viz units.
+			SplitStr(CS120StrArr(),CS120Str," ",6,5)
+			'Check CRC to make sure message is complete and correct
+			LngCRCMsg=HexToDec(Mid(CS120Str,(CS120_Bytes-4),5))
+			LngCRCCalc=CheckSum(CS120Str,1,CS120_Bytes-5)
+			ChkSumF=IIf(LngCRCCalc-LngCRCMsg=0,true,false)
+		EndIf
+		'CS100 Barometric Pressure Sensor measurement 'BP_mmHg'
+		If TimeIntoInterval(59,60,Min) Then PortSet(3,1)
+		If TimeIntoInterval(0,60,Min) Then
+			VoltSE(BP_mmHg,1,mV2500,3,1,0,_60Hz,0.2,600)
+			BP_mmHg=BP_mmHg*1.333227
+			PortSet(3,0)
+		EndIf
+
+		'Call Data Tables and Store Data
+		CallTable OneHour
+		CallTable OneMin
+		CallTable FifteenSec
+		
+	NextScan
+EndProg
+
+
