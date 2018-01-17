@@ -1,3 +1,5 @@
+-- sqlcmd -S localhost -U SA -P 'htu123#SQL' -w 1000 -d wsDB -i '/home/htu/Documents/HTU/weather-station-dashboard/ws_db.sql
+
 CREATE TABLE perMINUTE (
 	ts DATETIME,
 	rec INT PRIMARY KEY,

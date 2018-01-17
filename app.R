@@ -21,7 +21,6 @@ body <- dashboardBody(
       infoBoxOutput("air_temp_box", width = 2),
       infoBoxOutput("rel_humidity_box", width = 2),
       infoBoxOutput("wind_speed_box", width = 3),
-      # infoBoxOutput("wind_direction_box", width = 2),
       infoBoxOutput("air_d_box", width = 2),
       infoBoxOutput("solar_rad_box", width = 3)),
 
@@ -82,75 +81,86 @@ ui <- shinyUI(
 # ------------------------------------------------------------------------------
 server <- function(input, output, session) {
 
-    get_sql_data <- reactivePoll(10000, session,
-      checkFunc = function() {
-        sqlQuery(con, "select MAX(ts) from perHOUR")
-      },
-      valueFunc =  function() {
-        reactive_data <- sqlQuery(con,
-                                  "select * from perHOUR",
-                                  stringsAsFactors = FALSE,
-                                  as.is = c(T, F))
-        reactive_data_DT <- as.POSIXct(reactive_data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
-        reactive_data[-2] <- data.frame(sapply(reactive_data[-2], as.numeric))
-        reactive_data$ts <- reactive_data_DT
-        reactive_data <- reactive_data[order(reactive_data$ts),]
-        reactive_data
-      }
-    )
+
 
   # ----------------------------------------------------------------------------
   # Define Reactive Functions
   # ----------------------------------------------------------------------------
-  data <- reactive({
-    get_sql_data()
+  data_now <- reactive({
+    invalidateLater(15000, session)
+    read.table(file = filepath1, sep=",", skip = 4, quote= "", col.names = cols)
   })
 
-  reactive_last_entry <- reactive({
-    invalidateLater(10000, session)
-    d <- data()
-    tail(d, 1)
+  sql_data <- reactive({
+    invalidateLater(15000, session)
+    con <- connect_to_db()
+    reactive_data <- sqlQuery(con,
+                              "select top 15840 * from perMINUTE",
+                              stringsAsFactors = FALSE,
+                              as.is = c(T, F))
+    odbcCloseAll()
+    reactive_data_DT <- as.POSIXct(reactive_data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
+    reactive_data[-2] <- data.frame(sapply(reactive_data[-2], as.numeric))
+    reactive_data$ts <- reactive_data_DT
+    reactive_data <- reactive_data[order(reactive_data$ts),]
+    return(reactive_data)
+  })
+
+  sql_data_hour <- reactive({
+    invalidateLater(15000, session)
+    con <- connect_to_db()
+    reactive_data <- sqlQuery(con,
+                              "select top 168 * from perHOUR",
+                              stringsAsFactors = FALSE,
+                              as.is = c(T, F))
+    odbcCloseAll()
+    reactive_data_DT <- as.POSIXct(reactive_data$ts, format="%Y-%m-%d %H:%M:%S", tz="EET")
+    reactive_data[-2] <- data.frame(sapply(reactive_data[-2], as.numeric))
+    reactive_data$ts <- reactive_data_DT
+    reactive_data <- reactive_data[order(reactive_data$ts),]
+    odbcCloseAll()
+    return(reactive_data)
   })
 
   reactive_air_temp <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x1 <- tail(reactive_data$temp, 1)
   })
   reactive_wind_power <- reactive({
     invalidateLater(10000, session)
-    x2 <<- round(wind_power_function(reactive_air_density(), reactive_last_entry()), 2)
+    x2 <<- round(wind_power_function(reactive_air_density(), data_now()), 2)
   })
   reactive_wind_speed <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x3 <- tail(reactive_data$ws, 1)
   })
   reactive_wind_direction <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x4 <- tail(reactive_data$wd, 1)
   })
   reactive_rel_humidity <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x5 <- tail(reactive_data$rh, 1)
   })
   reactive_solar_rad <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x6 <- tail(reactive_data$srad, 1)
   })
 
   reactive_air_density <- reactive({
     invalidateLater(10000, session)
-    reactive_data <- data()
+    reactive_data <- data_now()
     x7 <<- air_density_function(reactive_data)
   })
 
   windrose_data <- reactive({
     invalidateLater(10000, session)
-    x <- tail(data(), 100)
+    x <- tail(sql_data(), 100)
     y <- NULL
     density <- (air_density_function(x))
     y$wp <- wind_power_function(density, x)
@@ -161,7 +171,7 @@ server <- function(input, output, session) {
 
   temperature_data <- reactive({
     invalidateLater(10000, session)
-    x <- data()
+    x <- sql_data()
     y <- NULL
     y$temp <- x$temp
     y$ts <- x$ts
@@ -202,15 +212,15 @@ server <- function(input, output, session) {
   # Define Plots
   # ----------------------------------------------------------------------------
 
-  z <- c("dodgerblue4", "white", "firebrick")
-  zx <- c("skyblue", "steelblue", "black")
+  z <- c("dodgerblue4", "dodgerblue4", "gray", "firebrick", "firebrick")
+
   output$windrose <- renderPlot({
     pollutionRose(mydata = windrose_data(), ws = "ws", pollutant = "wp", cols = z, annotate = FALSE)
   })
 
   output$density_humidity <- renderPlot({
     invalidateLater(10000)
-    df <- get_sql_data()
+    df <- sql_data_hour()
     subtract_month <- tail(df$ts, 1) %m-% months(1)
     df <- subset(df, ts > subtract_month)
     dh_df <- NULL
@@ -219,8 +229,8 @@ server <- function(input, output, session) {
     dh_df$humidity <- norm_data(df$rh)
     dh_df <- data.frame(dh_df)
     dh_df <- melt(dh_df, id=c("ts"))
-    ggplot(dh_df) + geom_line(aes(x=ts, y=value, colour=variable), size = 1) +
-      geom_point(aes(x = ts, y = value, colour = variable), size = 1.5) +
+    ggplot(dh_df) + geom_line(aes(x=ts, y=value, colour=variable), size = 1.1) +
+      geom_point(aes(x = ts, y = value, colour = variable), size = 5, shape = 1) +
       scale_colour_manual(values=c("firebrick", "steelblue")) +
       theme_minimal() +
       theme(legend.position = "bottom", axis.title.x=element_blank())
@@ -230,7 +240,7 @@ server <- function(input, output, session) {
   output$temperature_plot <- renderPlot({
     invalidateLater(10000)
     # Create daily factor
-    df <- (get_sql_data())
+    df <- sql_data()
     subtract_month <- tail(df$ts, 1) %m-% months(1)
     df <- subset(df, ts > subtract_month)
     df$day <- factor(df$ts)
@@ -257,6 +267,7 @@ server <- function(input, output, session) {
       theme(axis.title.x=element_blank())
   })
 
+  # session$onSessionEnded(stopApp)
 }
 
 options(warn = oldw)

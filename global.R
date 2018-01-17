@@ -2,12 +2,11 @@
 oldw <- getOption("warn")
 options(warn = -1)
 
-
+# ------------------------------------------------------------------------------
 # Import Libraries and Modules
 # ------------------------------------------------------------------------------
 library(shiny)
 library(shinydashboard)
-library(xlsx)
 library(magrittr)
 library(scales)
 library(ggplot2)
@@ -16,25 +15,28 @@ library(reshape2)
 library(RODBC)
 library(lubridate)
 
+
 # ------------------------------------------------------------------------------
-# Define SQL Functions
+# Define Filepath and Column Names
 # ------------------------------------------------------------------------------
-con <- odbcDriverConnect(connection=
-                        "driver=/opt/microsoft/msodbcsql/lib64/libmsodbcsql-13.1.so.9.1;
-                         server=localhost;
-                         database=wsDB;
-                         uid=**********;
-                         pwd=**********")
-retrieve_data <- function() {
-  reactive_data <- sqlQuery(con, "select * from perHOUR")
-  # close(con)
-  return(reactive_data)
+filepath1 <<- "C:\\Campbellsci\\LoggerNet\\CR1000_FifteenSec.dat"
+filepath2 <<- "C:\\Campbellsci\\LoggerNet\\CR1000_OneMinute.dat"
+filepath3 <<- "C:\\Campbellsci\\LoggerNet\\CR1000_OneHour.dat"
+cols <<- c("ts", "rec", "ws", "wd", "wsc", "srad", "temp", "rh", "rain", "vis", "bp")
+
+
+# ------------------------------------------------------------------------------
+# Define Database Connection
+# ------------------------------------------------------------------------------
+
+connect_to_db <- function() {
+  con <<- odbcDriverConnect(connection=
+                              'dsn=weather-ODBC;
+                            driver={SQL Server Native Client 11.0};
+                            trusted_connection=yes')
+  return(con)
 }
-cheap_check <- function() {
-  data_check <- sqlQuery(con, "select MAX(ts) from perHOUR")
-  # close(con)
-  return(data_check)
-}
+
 # ------------------------------------------------------------------------------
 # Define Calculation Functions
 # ------------------------------------------------------------------------------

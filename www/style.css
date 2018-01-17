@@ -27,6 +27,16 @@ body {
     width: 20% !important;
 }
 
+.bg-maroon {
+    background-color: #b22222 !important;
+}
+
+
+.bg-navy {
+    background-color: #00456d !important;
+}
+
+
 div.box-header {
   text-align: center;
 }
