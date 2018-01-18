@@ -1,5 +1,8 @@
 # Weather Station Dashboard
 
+### Contributers to this Project 
+Radi Al-Rashed, Yanal Kashou and the IT Department.  
+
 ## Overview
 We have a weather station atop the main building at HTU. We decided to take the data feed and create a simple real-time / pseudo real-time dashboard that represents the data in an intuitive way and gives insight into our weather conditions.
 
@@ -71,6 +74,8 @@ CSS design stylesheet for the dashboard.
 
 - We intially wanted to display a correlation between _solar radiation_ and _visibility_, however the plot was difficult to read and understand, and was not so aesthetically pleasing. So we decided to investigate and show the inverse-correlation between _relative humidity_ and _air density_.  
 
+- Positioning the top elements including the logo was a mess, using the `shinydashboard` package put a lot of contraints and we had to disable the header completely from CSS and hard code the widths of each element as a % of the total width instead of sticking to bootstrap's grid system.
+
 #### Calculations  
 - We also needed to find the _air density_ through calculations, this was important to display the _wind rose_ and the _air density vs relative humidity_. So we got on Wikipedia and used the equation of air density for humid air. <https://en.wikipedia.org/wiki/Density_of_air#Humidity_(water_vapor)>
 
@@ -78,6 +83,8 @@ CSS design stylesheet for the dashboard.
 The equation was also taken from Wikipedia: <https://en.wikipedia.org/wiki/Wind_power#Wind_energy>
 
 #### Code
+- Setting up the SQL connections on Linux and Windows were different. Windows demanded a Data Source be defined, while on Linux simply supplying the connection string with a `driver`, `server`, `user` and `password` was enough.
 
+- We faced a bottleneck when setting the collection interval
 
 #### Hardware
