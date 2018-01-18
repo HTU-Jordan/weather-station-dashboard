@@ -71,6 +71,7 @@ CSS design stylesheet for the dashboard.
 
 2. We intially wanted to display a correlation between _solar radiation_ and _visibility_, however the plot was difficult to read and understand, and was not so aesthetically pleasing. So we decided to investigate and show the inverse-correlation between _relative humidity_ and _air density_.  
 
+#### Calculations  
 3. We also needed to find the _air density_ through calculations, this was important to display the _wind rose_ and the _air density vs relative humidity_. So we got on Wikipedia and used the equation of air density for humid air. <https://en.wikipedia.org/wiki/Density_of_air#Humidity_(water_vapor)>
 
 4. The _wind rose_ displays __wind power__, however our weather station does not output the wind power, it outputs variables such as __wind speed__ and __wind direction__. So we calculated the **_specific_** __wind power__ as if it is being collected by a wind turbine with an area of 1m^2 because we do not have a wind turbine.  
