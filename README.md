@@ -85,6 +85,6 @@ The equation was also taken from Wikipedia: <https://en.wikipedia.org/wiki/Wind_
 #### Code
 - Setting up the SQL connections on Linux and Windows were different. Windows demanded a Data Source be defined, while on Linux simply supplying the connection string with a `driver`, `server`, `user` and `password` was enough.
 
-- We faced a bottleneck when setting the collection interval
+- We faced a bottleneck when setting the collection interval, where the data table output from the weather station was every hour and we thought that we were getting data on a shorter interval, however it turned out that we were collecting the same data every minute or so. This was fixed by reprogramming the data logger and setting the table outputs to shorter intervals.
 
 #### Hardware
