@@ -65,3 +65,5 @@ Linux scripts to run the dashboard by broadcasting to an IP address and run the 
 - `www\style.css`  
 CSS design stylesheet for the dashboard.
 
+## Difficulties and Obstacles  
+To be written...  
