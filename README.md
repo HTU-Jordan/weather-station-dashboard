@@ -68,7 +68,7 @@ Linux scripts to run the dashboard by broadcasting to an IP address and run the 
 - `www\style.css`  
 CSS design stylesheet for the dashboard.
 
-## Difficulties and Obstacles   
+## Lessons Learned 
 #### Design  
 - Because we used `shinydashboard` as the package for the UI, altering the UI and sizing it according to resolution demanded hard-coding the CSS elements. The code hosted here is for a resolution of 1920x1080. We had to redesign it when broadcasting to a screen because the resolution was 1280x768.  
 
