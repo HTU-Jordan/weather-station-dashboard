@@ -65,5 +65,16 @@ Linux scripts to run the dashboard by broadcasting to an IP address and run the 
 - `www\style.css`  
 CSS design stylesheet for the dashboard.
 
-## Difficulties and Obstacles  
-To be written...  
+## Difficulties and Obstacles   
+#### Design  
+1. Because we used `shinydashboard` as the package for the UI, altering the UI and sizing it according to resolution demanded hard-coding the CSS elements. The code hosted here is for a resolution of 1920x1080. We had to redesign it when broadcasting to a screen because the resolution was 1280x768.  
+
+2. We intially wanted to display a correlation between _solar radiation_ and _visibility_, however the plot was difficult to read and understand, and was not so aesthetically pleasing. So we decided to investigate and show the inverse-correlation between _relative humidity_ and _air density_.  
+
+3. We also needed to find the _air density_ through calculations, this was important to display the _wind rose_ and the _air density vs relative humidity_. So we got on Wikipedia and used the equation of air density for humid air. <https://en.wikipedia.org/wiki/Density_of_air#Humidity_(water_vapor)>
+
+
+#### Code
+
+
+#### Hardware
