@@ -88,3 +88,4 @@ The equation was also taken from Wikipedia: <https://en.wikipedia.org/wiki/Wind_
 - We faced a bottleneck when setting the collection interval, where the data table output from the weather station was every hour and we thought that we were getting data on a shorter interval, however it turned out that we were collecting the same data every minute or so. This was fixed by reprogramming the data logger and setting the table outputs to shorter intervals.
 
 #### Hardware
+- The weather station was initially powered by a built-in solar cell that charges it's battery. When we changed the interval down from 1 hour to both 1 hour, 1 minute and 15 seconds, the battery voltage fell whenever weather conditions worsened and at night. This caused gaps in our data. We fixed it by connecting it directly via power cable.
