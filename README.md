@@ -22,7 +22,8 @@ __Note:__ All IP addresses, database users and passwords have been replaced with
 
 
 ## Folder Structure
-Stylesheet, logo, font and footer files are place in the `www` folder. Shiny readily accepts them in this directory.
+Stylesheet, logo, font and footer files are place in the `www` folder. Shiny readily accepts them in this directory.  
+Some of the raw data is available in the `data-snapshots` folder.  
 
 ## Data Pipeline
 The weather station outputs 3 comma-separated tables.   
