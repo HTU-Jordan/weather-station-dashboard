@@ -76,11 +76,13 @@ CSS design stylesheet for the dashboard.
 
 - Positioning the top elements including the logo was a mess, using the `shinydashboard` package put a lot of contraints and we had to disable the header completely from CSS and hard code the widths of each element as a % of the total width instead of sticking to bootstrap's grid system.
 
-#### Calculations  
+#### Readings and Calculations  
 - We also needed to find the _air density_ through calculations, this was important to display the _wind rose_ and the _air density vs relative humidity_. So we got on Wikipedia and used the equation of air density for humid air. <https://en.wikipedia.org/wiki/Density_of_air#Humidity_(water_vapor)>
 
 - The _wind rose_ displays __wind power__, however our weather station does not output the wind power, it outputs variables such as __wind speed__ and __wind direction__. So we calculated the **_specific_** __wind power__ as if it is being collected by a wind turbine with an area of 1m^2 because we do not have a wind turbine.  
 The equation was also taken from Wikipedia: <https://en.wikipedia.org/wiki/Wind_power#Wind_energy>
+
+- The __barometric pressure__ readings were off and needed calibration. We calibrated it to a weather station in _Marka_ following advice from __Arabia Weather__. However, we still have a problem, as our readings do not fluctuate even in extreme weather events.
 
 #### Code
 - Setting up the SQL connections on Linux and Windows were different. Windows demanded a Data Source be defined, while on Linux simply supplying the connection string with a `driver`, `server`, `user` and `password` was enough.
