@@ -83,7 +83,8 @@ CSS design stylesheet for the dashboard.
 - The _wind rose_ displays __wind power__, however our weather station does not output the wind power, it outputs variables such as __wind speed__ and __wind direction__. So we calculated the **_specific_** __wind power__ as if it is being collected by a wind turbine with an area of 1m^2 because we do not have a wind turbine.  
 The equation was also taken from Wikipedia: <https://en.wikipedia.org/wiki/Wind_power#Wind_energy>
 
-- The __barometric pressure__ readings were off and needed calibration. We calibrated it to a weather station in _Marka_ following advice from __Arabia Weather__. However, we still have a problem, as our readings do not fluctuate even in extreme weather events.
+- The __barometric pressure__ readings were off and needed calibration. We calibrated it to a weather station in _Marka_ following advice from __Arabia Weather__. However, our readings did not fluctuate even in extreme weather events.
+This was fixed by setting the SEChan (SE Channel) variable in the LoggerNet Configuration to "2". It was fixed by trial and error.
 
 #### Code
 - Setting up the SQL connections on Linux and Windows were different. Windows demanded a Data Source be defined, while on Linux simply supplying the connection string with a `driver`, `server`, `user` and `password` was enough.
